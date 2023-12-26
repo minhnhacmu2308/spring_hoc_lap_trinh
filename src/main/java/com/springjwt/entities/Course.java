@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -21,6 +22,7 @@ public class Course {
     private String description;
     private int price;
     private boolean isFree;
+    private Date createdAt;
 
     @ManyToOne
     @JoinColumn(name = "courseTypesId")

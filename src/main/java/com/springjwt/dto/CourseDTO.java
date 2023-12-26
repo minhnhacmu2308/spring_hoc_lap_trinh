@@ -4,6 +4,7 @@ import com.springjwt.entities.CourseType;
 import com.springjwt.entities.CourseVideo;
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -14,6 +15,7 @@ public class CourseDTO {
     private String description;
     private int price;
     private boolean isFree;
+    private Date createdAt;
 
     private CourseTypeDTO courseType;
     private List<CourseVideoDTO> courseVideos;

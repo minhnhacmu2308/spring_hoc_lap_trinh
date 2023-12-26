@@ -1,5 +1,6 @@
 package com.springjwt.controllers;
 
+import com.springjwt.dto.UserDTO;
 import com.springjwt.entities.User;
 import com.springjwt.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api-auth/users")
 public class UserController {
 
     @Autowired
@@ -20,9 +21,14 @@ public class UserController {
         return userService.getAll();
     }
 
-    @GetMapping("/{id}")
-    public Optional<User> getUserById(@PathVariable int id) {
-        return userService.findById(id);
+//    @GetMapping("/{id}")
+//    public Optional<User> getUserById(@PathVariable int id) {
+//        return userService.findById(id);
+//    }
+
+    @GetMapping("/{email}")
+    public UserDTO getUserById(@PathVariable String email) {
+        return userService.findByEmail(email);
     }
 
     @PostMapping
