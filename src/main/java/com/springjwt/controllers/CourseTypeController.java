@@ -1,5 +1,6 @@
 package com.springjwt.controllers;
 
+import com.springjwt.dto.CourseTypeDTO;
 import com.springjwt.entities.CourseType;
 import com.springjwt.services.CourseTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class CourseTypeController {
     private CourseTypeService courseTypeService;
 
     @GetMapping
-    public List<CourseType> getAllCourseTypes() {
+    public List<CourseTypeDTO> getAllCourseTypes() {
         return courseTypeService.getAll();
     }
 

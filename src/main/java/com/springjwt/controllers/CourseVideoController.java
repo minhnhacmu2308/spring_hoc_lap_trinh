@@ -1,5 +1,6 @@
 package com.springjwt.controllers;
 
+import com.springjwt.dto.CourseVideoDTO;
 import com.springjwt.entities.CourseVideo;
 import com.springjwt.services.CourseVideoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class CourseVideoController {
     }
 
     @GetMapping("/{id}")
-    public Optional<CourseVideo> getCourseVideoById(@PathVariable int id) {
+    public CourseVideoDTO getCourseVideoById(@PathVariable int id) {
         return courseVideoService.findById(id);
     }
 
@@ -30,18 +31,18 @@ public class CourseVideoController {
         return courseVideoService.save(courseVideo);
     }
 
-    @PutMapping("/{id}")
-    public CourseVideo updateCourseVideo(@PathVariable int id, @RequestBody CourseVideo updatedCourseVideo) {
-        CourseVideo existingCourseVideo = courseVideoService.findById(id).orElse(null);
-        if (existingCourseVideo != null) {
-            existingCourseVideo.setVideoName(updatedCourseVideo.getVideoName());
-            existingCourseVideo.setVideoUrl(updatedCourseVideo.getVideoUrl());
-            // Update other attributes as needed
-            return courseVideoService.save(existingCourseVideo);
-        } else {
-            return null;
-        }
-    }
+//    @PutMapping("/{id}")
+//    public CourseVideo updateCourseVideo(@PathVariable int id, @RequestBody CourseVideo updatedCourseVideo) {
+//        CourseVideo existingCourseVideo = courseVideoService.findById(id).orElse(null);
+//        if (existingCourseVideo != null) {
+//            existingCourseVideo.setVideoName(updatedCourseVideo.getVideoName());
+//            existingCourseVideo.setVideoUrl(updatedCourseVideo.getVideoUrl());
+//            // Update other attributes as needed
+//            return courseVideoService.save(existingCourseVideo);
+//        } else {
+//            return null;
+//        }
+//    }
 
     @DeleteMapping("/{id}")
     public void deleteCourseVideo(@PathVariable int id) {
