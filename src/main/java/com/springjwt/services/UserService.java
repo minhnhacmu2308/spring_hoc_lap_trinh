@@ -11,6 +11,6 @@ public interface UserService {
     List<User> getAll();
     Optional<User> findById(int id);
     UserDTO findByEmail(String email);
-    User save(User user);
+    UserDTO save(User user);
     void deleteById(int id);
 }

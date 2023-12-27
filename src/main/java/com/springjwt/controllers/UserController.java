@@ -4,6 +4,7 @@ import com.springjwt.dto.UserDTO;
 import com.springjwt.entities.User;
 import com.springjwt.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,26 +33,37 @@ public class UserController {
     }
 
     @PostMapping
-    public User createUser(@RequestBody User user) {
+    public UserDTO createUser(@RequestBody User user) {
         return userService.save(user);
     }
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable int id, @RequestBody User updatedUser) {
+    public UserDTO updateUser(@PathVariable int id, @RequestBody User updatedUser) {
         User existingUser = userService.findById(id).orElse(null);
         if (existingUser != null) {
             existingUser.setFullName(updatedUser.getFullName());
-            existingUser.setEmail(updatedUser.getEmail());
-            existingUser.setPassword(updatedUser.getPassword());
+            existingUser.setPassword(existingUser.getPassword());
             existingUser.setPhoneNumber(updatedUser.getPhoneNumber());
             existingUser.setAddress(updatedUser.getAddress());
-            existingUser.setGender(updatedUser.getGender());
-            existingUser.setStatus(updatedUser.getStatus());
-            existingUser.setRole(updatedUser.getRole());
             // Update other attributes as needed
             return userService.save(existingUser);
         } else {
             return null;
+        }
+    }
+
+    @PutMapping("/change-password/{id}")
+    public boolean updatePassword(@PathVariable int id, @RequestBody User updatedUser) {
+
+        User existingUser = userService.findById(id).orElse(null);
+        if (existingUser != null) {
+            String passwordBCrypt = new BCryptPasswordEncoder().encode(updatedUser.getPassword());
+            existingUser.setPassword(passwordBCrypt);
+            userService.save(existingUser);
+            // Update other attributes as needed
+            return true;
+        } else {
+            return false;
         }
     }
 

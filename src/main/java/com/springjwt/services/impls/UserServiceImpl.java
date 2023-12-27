@@ -39,8 +39,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User save(User user) {
-        return userRepository.save(user);
+    public UserDTO save(User user) {
+        User obj = userRepository.save(user);
+        return modelMapper.map(obj, UserDTO.class);
     }
 
     @Override
