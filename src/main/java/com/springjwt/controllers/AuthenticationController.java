@@ -2,6 +2,9 @@ package com.springjwt.controllers;
 
 import com.springjwt.dto.AuthenticationDTO;
 import com.springjwt.dto.AuthenticationResponse;
+import com.springjwt.dto.UserDTO;
+import com.springjwt.entities.User;
+import com.springjwt.services.UserService;
 import com.springjwt.services.jwt.UserDetailsServiceImpl;
 import com.springjwt.util.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,9 +15,7 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -29,6 +30,9 @@ public class AuthenticationController {
 
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
+
+    @Autowired
+    private UserService userService;
 
     @PostMapping("/authenticate")
     public AuthenticationResponse createAuthenticationToken(@RequestBody AuthenticationDTO authenticationDTO, HttpServletResponse response) throws BadCredentialsException, DisabledException, UsernameNotFoundException, IOException {
@@ -48,5 +52,7 @@ public class AuthenticationController {
         return new AuthenticationResponse(jwt);
 
     }
+
+
 
 }

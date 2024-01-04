@@ -2,6 +2,7 @@ package com.springjwt.controllers;
 
 import com.springjwt.entities.User;
 import com.springjwt.repositories.UserRepository;
+import com.springjwt.services.EmailService;
 import com.springjwt.services.auth.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,14 +20,22 @@ public class SignupController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     @PostMapping("/sign-up")
     public ResponseEntity<?> signupUser(@RequestBody User user) {
         User checkExisted = userRepository.findFirstByEmail(user.getEmail());
         if (checkExisted != null) {
             return new ResponseEntity<>("Email đã tồn tại ", HttpStatus.CONFLICT);
         }
+        user.setStatus(0);
         authService.register(user);
-
+        String to = user.getEmail();
+        String url = "http://localhost:8080/api/active-account/"+to;
+        String subject = "Xác nhận đăng ký";
+        String text = "Nhấn vào link để xác minh đăng ký tài khoản " + url;
+        emailService.sendEmail(to, subject, text);
         return new ResponseEntity<>("Đăng ký tài khoản thành công",HttpStatus.CREATED);
     }
 

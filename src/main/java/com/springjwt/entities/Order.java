@@ -17,7 +17,7 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int orderId;
     private Date orderDate;
-    private int totalPrice;
+    private double totalPrice;
 
     @ManyToOne
     @JoinColumn(name = "userId")

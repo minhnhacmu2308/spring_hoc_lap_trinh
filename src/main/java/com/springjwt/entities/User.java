@@ -34,6 +34,8 @@ public class User {
 
     private int status;
 
+    private String otp;
+
     @ManyToOne
     @JoinColumn(name = "roleId")
     private Role role;
