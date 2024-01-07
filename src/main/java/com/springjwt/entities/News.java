@@ -16,5 +16,6 @@ public class News {
     private int newsId;
     private String title;
     private String image;
+    @Column(columnDefinition = "TEXT")
     private String content;
 }

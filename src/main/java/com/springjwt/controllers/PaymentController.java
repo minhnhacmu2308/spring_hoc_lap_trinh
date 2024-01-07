@@ -11,6 +11,7 @@ import com.springjwt.entities.Order;
 import com.springjwt.entities.User;
 import com.springjwt.repositories.CourseRepository;
 import com.springjwt.services.CourseService;
+import com.springjwt.services.OrderService;
 import com.springjwt.services.PayPalService;
 import com.springjwt.services.UserService;
 import lombok.Data;
@@ -26,7 +27,7 @@ import java.util.Date;
 @RequestMapping("/api/payment-online")
 public class PaymentController {
 
-    private static final double EXCHANGE_RATE = 0.000043;
+    private static final double EXCHANGE_RATE = 0.000041;
 
     @Autowired
     private PayPalService payPalService;
@@ -37,17 +38,20 @@ public class PaymentController {
     @Autowired
     private CourseRepository courseRepository;
 
+    @Autowired
+    private OrderService orderService;
+
     @PostMapping("/create-payment")
     public ResponseEntity<ResponseApi> createPayment(@RequestBody CreatePaymentDTO body) throws PayPalRESTException {
         UserDTO user = userService.findByEmail(body.getEmail());
         if (user != null) {
             User existingUser = userService.findById(Integer.parseInt(String.valueOf(user.getUserId()))).orElse(null);
             if (existingUser != null) {
-                String successUrl = "http://localhost:3001/payment/success";
-                String cancelUrl = "http://localhost:3001/payment/cancel";
+                String successUrl = "http://localhost:3000/payment-success?courseId="+body.getCourseId();
+                String cancelUrl = "http://localhost:3000/payment-cancel?courseId="+body.getCourseId();
                 double amountInUsd = convertVndToUsd(body.getTotalPrice());
 
-                Payment createdPayment = payPalService.createPayment(String.valueOf(amountInUsd * 100),"USD",successUrl,cancelUrl);
+                Payment createdPayment = payPalService.createPayment(String.valueOf(amountInUsd),"USD",successUrl,cancelUrl);
                 String url =  createdPayment.getLinks().stream()
                         .filter(link -> link.getRel().equals("approval_url"))
                         .findFirst()
@@ -62,7 +66,7 @@ public class PaymentController {
         return null;
     }
 
-    @GetMapping("/success")
+    @PostMapping("/success")
     public ResponseEntity<?> createPaymentSuccess(@RequestBody CreatePaymentDTO body) throws PayPalRESTException {
         try {
             Payment payment = payPalService.executePayment(body.getPaymentId(), body.getPayerId());
@@ -72,12 +76,12 @@ public class PaymentController {
             // Chuyển đổi từ LocalDateTime sang Date
             Date date = convertToDate(localDateTime);
             Course course = courseRepository.findById(body.getCourseId()).get();
-            double amountInUsd = convertVndToUsd(body.getTotalPrice());
             Order order = new Order();
             order.setUser(existingUser);
             order.setOrderDate(date);
             order.setCourse(course);
-            order.setTotalPrice(amountInUsd);
+            order.setTotalPrice(body.getTotalPrice());
+            orderService.save(order);
             return new ResponseEntity<>("Payment executed successfully", HttpStatus.OK);
         } catch (PayPalRESTException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

@@ -1,7 +1,12 @@
 package com.springjwt.controllers;
 
+import com.springjwt.dto.OrderDTO;
+import com.springjwt.dto.UserDTO;
 import com.springjwt.entities.Order;
+import com.springjwt.entities.User;
+import com.springjwt.repositories.UserRepository;
 import com.springjwt.services.OrderService;
+import com.springjwt.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,8 +14,11 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/orders")
+@RequestMapping("/api/order")
 public class OrderController {
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private OrderService orderService;
@@ -23,6 +31,12 @@ public class OrderController {
     @GetMapping("/{id}")
     public Optional<Order> getOrderById(@PathVariable int id) {
         return orderService.findById(id);
+    }
+
+    @GetMapping("/by-user/{email}")
+    public List<OrderDTO> getOrderByUser(@PathVariable String email) {
+        User user = userRepository.findFirstByEmail(email);
+        return orderService.findOrderByUser(user);
     }
 
     @PostMapping

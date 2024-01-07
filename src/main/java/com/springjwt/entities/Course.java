@@ -19,6 +19,7 @@ public class Course {
     private int courseId;
     private String courseName;
     private String image;
+    @Column(columnDefinition = "TEXT")
     private String description;
     private int price;
     private boolean isFree;

@@ -16,7 +16,7 @@ public class CourseDTO {
     private int price;
     private boolean isFree;
     private Date createdAt;
-
     private CourseTypeDTO courseType;
     private List<CourseVideoDTO> courseVideos;
+    private List<OrderLinkDTO> orders;
 }
