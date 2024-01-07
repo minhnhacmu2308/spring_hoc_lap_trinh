@@ -50,7 +50,7 @@ public class EmailController {
                 String to = user.getEmail();
                 String url = "http://localhost:8080/api/reset-password/"+otp +"/"+to;
                 String subject = "Forgot password";
-                String text = "Nhấn vào link để reset mat khau  " + url;
+                String text = "Link reset password : <a href='" + url + "' target = '_blank'>Click here</a>";
                 emailService.sendEmail(to, subject, text);
                 return new ResponseEntity<>("Request reset password success", HttpStatus.OK);
             }
@@ -70,9 +70,9 @@ public class EmailController {
                 userService.save(existingUser);
                 String to = user.getEmail();
                 String subject = "Mật khẩu mới ";
-                String text = "Mật khẩu mới của bạn là :"+"<b>123456789</b>";
+                String text = "New password :"+"<b>123456789</b>";
                 emailService.sendEmail(to, subject, text);
-                return new ResponseEntity<>("Reset mâjt khẩu thành công vui lòng check mail để nhận mật khẩu mới", HttpStatus.OK);
+                return new ResponseEntity<>("Reset mật khẩu thành công vui lòng check mail để nhận mật khẩu mới", HttpStatus.OK);
             }
         }
         return null;

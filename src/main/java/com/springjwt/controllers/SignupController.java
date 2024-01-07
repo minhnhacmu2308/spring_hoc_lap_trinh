@@ -34,7 +34,7 @@ public class SignupController {
         String to = user.getEmail();
         String url = "http://localhost:8080/api/active-account/"+to;
         String subject = "Xác nhận đăng ký";
-        String text = "Nhấn vào link để xác minh đăng ký tài khoản " + url;
+        String text = "Link active account : <a href='" + url + "' target = '_blank'>Click here</a>";
         emailService.sendEmail(to, subject, text);
         return new ResponseEntity<>("Đăng ký tài khoản thành công",HttpStatus.CREATED);
     }

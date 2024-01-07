@@ -23,7 +23,7 @@ public class EmailServiceImpl implements EmailService {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            String senderName = "Pizza Hut";
+            String senderName = "Website học lập trình";
             // Thiết lập địa chỉ email người gửi
             String senderEmail = "purplerose2305@gmail.com";
             // Tạo đối tượng InternetAddress với tên và địa chỉ email người gửi
