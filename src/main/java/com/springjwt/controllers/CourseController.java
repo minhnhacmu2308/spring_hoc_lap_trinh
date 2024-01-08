@@ -1,5 +1,7 @@
 package com.springjwt.controllers;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.springjwt.dto.CourseDTO;
 import com.springjwt.dto.CourseTypeDTO;
 import com.springjwt.entities.Course;
@@ -8,9 +10,13 @@ import com.springjwt.repositories.CourseRepository;
 import com.springjwt.services.CourseService;
 import com.springjwt.services.CourseTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -24,6 +30,9 @@ public class CourseController {
 
     @Autowired
     private CourseRepository courseRepository;
+
+    @Autowired
+    private Cloudinary cloudinary;
 
     @GetMapping
     public List<CourseDTO> getAllCourses() {
@@ -48,6 +57,21 @@ public class CourseController {
     public List<CourseDTO> getCourseByType(@PathVariable int id) {
         Optional<CourseType> courseType = courseTypeService.findById(id);
         return courseService.findCourseByCourseType(courseType.get());
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file) {
+        try {
+            // Upload ảnh lên Cloudinary
+            Map<?, ?> result = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+
+            // Trả về URL của ảnh đã upload
+            String imageUrl = (String) result.get("url");
+            return ResponseEntity.ok().body(imageUrl);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Error uploading image");
+        }
     }
 
     @PostMapping
